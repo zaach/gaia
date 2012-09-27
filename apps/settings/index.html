@@ -16,6 +16,7 @@
 
     <!-- Localization -->
     <link rel="resource" type="application/l10n" href="locales/locales.ini"/>
+    <link rel="resource" type="application/l10n" href="shared/locales/date.ini"/>
     <script type="application/javascript" src="shared/js/l10n.js"></script>
     <script type="application/javascript" src="shared/js/l10n_date.js"></script>
 
@@ -31,7 +32,7 @@
     <script type="application/javascript" defer src="js/battery.js"></script>
     <script type="application/javascript" defer src="js/storage.js"></script>
     <script type="application/javascript" defer src="js/app_storage.js"></script>
-    <script type="application/javascript" defer src="js/datetime.js"></script>
+    <script type="application/javascript" defer src="js/date_time.js"></script>
   </head>
   <body class="hidden skin-organic">
 
@@ -376,11 +377,16 @@
         </li>
         <li hidden id="device-visible">
           <label>
-            <input type="checkbox" checked/>
+            <input type="checkbox" checked />
             <span></span>
           </label>
           <small id="bluetooth-device-name"></small>
           <a data-l10n-id="bluetooth-visible-to-other">Visible to other devices</a>
+        </li>
+        <li hidden id="bluetooth-rename">
+          <label>
+            <button id="rename-device" data-l10n-id="rename-device" disabled>Rename My Device</button>
+          </label>
         </li>
       </ul>
 
@@ -404,11 +410,15 @@
       <div id="bluetooth-searching" data-l10n-id="search-for-device" class="explanation">
         Searching for devices…
       </div>
-      <div class="toolbar-height"><!-- a placeholder for the following menu --></div>
-      <menu id="bluetooth-options" class="bottom-toolbar toolbar-height">
-        <button id="search-device" data-l10n-id="search-device" disabled>Search for Devices</button>
-        <button id="rename-device" data-l10n-id="rename-device" disabled>Rename My Device</button>
-      </menu>
+      <ul hidden id="bluetooth-search">
+        <li>
+          <label>
+            <button id="search-device" data-l10n-id="search-device" disabled>Search for Devices</button>
+          </label>
+        </li>
+      </ul>
+
+      <!-- popup menu -->
       <ul id="paired-device-option" class="popup" hidden>
         <li id="connect-option">
           <a data-l10n-id="device-option-connect">Connect</a>
@@ -652,6 +662,7 @@
           Date &amp; Time
         </h1>
       </header>
+
       <ul>
         <li id="time-nitz-automatic-update">
           <label class="switch">
@@ -661,17 +672,22 @@
           <a data-l10n-id="setTimeAutomatically">Set Automatically</a>
         </li>
       </ul>
+
       <header>
         <h2 data-l10n-id="setTimeManually">Set Manually</h2>
       </header>
       <ul id="time-manual" hidden>
         <li id="setDate">
-          <a data-l10n-id="dateMessage">Date<span id="clock-date"></span></a>
-          <input type="date" id="date-picker"/>
+          <label>
+            <input type="date" id="date-picker" />
+          </label>
+          <a data-l10n-id="dateMessage">Date <span id="clock-date"></span> </a>
         </li>
         <li id="setTime">
-          <a data-l10n-id="timeMessage">Time<span id="clock-time"></span></a>
-          <input type="time" id="time-picker"/>
+          <label>
+            <input type="time" id="time-picker" />
+          </label>
+          <a data-l10n-id="timeMessage">Time <span id="clock-time"></span> </a>
         </li>
       </ul>
     </section>
