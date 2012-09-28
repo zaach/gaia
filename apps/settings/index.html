@@ -152,6 +152,26 @@
     </section>
 
     <!-- Connectivity :: Wi-Fi -->
+    <section role="region" id="wifi-manageNetworks">
+      <header>
+        <a href="#root"><span class="icon icon-back">back</span></a>
+        <h1 data-l10n-id="knownNetworks">
+          Known Networks
+        </h1>
+      </header>
+
+      <ul id="wifi-knownNetworks">
+        <!--
+          - filled by wifi.js — one list item per known network, e.g.:
+          -   <li>
+          -     <small> Network Security </small>
+          -     <a [class="wifi-secure"]> Network SSID </a>
+          -   </li>
+          -->
+      </ul>
+    </section>
+
+    <!-- Connectivity :: Wi-Fi -->
     <section role="region" id="wifi">
       <header>
         <a href="#root"><span class="icon icon-back">back</span></a>
@@ -193,10 +213,10 @@
           Searching…
         </li>
         <!--
-          - filled by wifi.js: one list item per available network, e.g.:
-          -   <li class="wifi-signal3">
-          -     <small> WPA2 </small>
-          -     <a> Fake Mozilla </a>
+          - filled by wifi.js — one list item per available network, e.g.:
+          -   <li class="wifi-signal[0-4]">
+          -     <small> Network Security </small>
+          -     <a [class="wifi-secure"]> Network SSID </a>
           -   </li>
           -->
         <li data-state="ready">
@@ -213,6 +233,11 @@
         <li id="macAddress">
           <small id="macAddress-desc"></small>
           <a data-l10n-id="macAddress">MAC Address</a>
+        </li>
+        <li>
+          <label>
+            <button id="manageNetworks" data-l10n-id="manageNetworks">Manage Networks</button>
+          </label>
         </li>
       </ul>
     </section>
@@ -704,90 +729,47 @@
 
       <ul>
         <li>
-          <label class="checkbox">
-            <input type="radio" name="language.current" value="ar"/>
-            <span class="checkbox-inner"></span>
+          <label>
+            <select name="language.current">
+              <option value="ar">العربية</option>
+              <option value="de">Deutsch</option>
+              <option value="el">Ελληνικά</option>
+              <option value="en-US">English (US)</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="nb-NO">Norsk</option>
+              <option value="it">Italiano</option>
+              <option value="pt-BR">Português (do Brasil)</option>
+              <option value="ru">Русский</option>
+              <option value="tr">Türkçe</option>
+              <option value="zh-TW">正體中文</option>
+            </select>
           </label>
-          <a>العربية</a>
+          <a data-l10n-id="language">Language</a>
         </li>
         <li>
           <label>
-            <input type="radio" name="language.current" value="de"/>
-            <span></span>
+            <select name="region.current">
+              <option value="BR">Brasil</option>
+              <option value="CO">Columbia</option>
+              <option value="ES">España</option>
+              <option value="FR">France</option>
+              <option value="PT">Portugal</option>
+              <option value="TW">Taiwan</option>
+              <option value="UK">United Kingdom</option>
+              <option value="US">United States</option>
+              <option value="VZ">Venezuela</option>
+            </select>
           </label>
-          <a dir="ltr">Deutsch</a>
-        </li>
-        <li>
-          <label>
-            <input type="radio" name="language.current" value="el"/>
-            <span></span>
-          </label>
-          <a dir="ltr">Ελληνικά</a>
-        </li>
-        <li>
-          <label>
-            <input type="radio" name="language.current" value="en-US" checked />
-            <span></span>
-          </label>
-          <a dir="ltr">English (US)</a>
-        </li>
-        <li>
-          <label>
-            <input type="radio" name="language.current" value="es"/>
-            <span></span>
-          </label>
-          <a dir="ltr">Español</a>
-        </li>
-        <li>
-          <label>
-            <input type="radio" name="language.current" value="fr"/>
-            <span></span>
-          </label>
-          <a dir="ltr">Français</a>
-        </li>
-        <li>
-          <label>
-            <input type="radio" name="language.current" value="nb-NO"/>
-            <span></span>
-          </label>
-          <a dir="ltr">Norsk</a>
-        </li>
-        <li>
-          <label>
-            <input type="radio" name="language.current" value="it"/>
-            <span></span>
-          </label>
-          <a dir="ltr">Italiano</a>
-        </li>
-        <li>
-          <label>
-            <input type="radio" name="language.current" value="pt-BR"/>
-            <span></span>
-          </label>
-          <a dir="ltr">Português (do Brasil)</a>
-        </li>
-        <li>
-          <label>
-            <input type="radio" name="language.current" value="ru"/>
-            <span></span>
-          </label>
-          <a dir="ltr">Русский</a>
-        </li>
-        <li>
-          <label>
-            <input type="radio" name="language.current" value="tr"/>
-            <span></span>
-          </label>
-          <a dir="ltr">Türkçe</a>
-        </li>
-        <li>
-          <label>
-            <input type="radio" name="language.current" value="zh-TW"/>
-            <span></span>
-          </label>
-          <a dir="ltr">正體中文</a>
+          <a data-l10n-id="region">Region</a>
         </li>
       </ul>
+
+      <dl>
+        <dt> Sample Format </dt>
+        <dd id="region-date">Friday, September 28 2012</dd>
+        <dd id="region-time">06:54 PM</dd>
+      </dl>
     </section>
 
     <!-- Personalization :: Keyboard -->
@@ -1343,15 +1325,22 @@
           <a data-l10n-id="powerSaveMode">Power Save Mode</a>
         </li>
         <li>
-        <label>
-          <select name="powersave.threshold">
-            <option value="0.05" data-l10n-id="powerSave-threshold" data-l10n-args='{"level": "5"}'>5% battery left</option>
-            <option value="0.15" data-l10n-id="powerSave-threshold" data-l10n-args='{"level": "15"}'>15% battery left</option>
-            <option value="0.25" data-l10n-id="powerSave-threshold" data-l10n-args='{"level": "25"}'>25% battery left</option>
-            <option value="0" data-l10n-id="never">Never</option>
-          </select>
-        </label>
-        <a data-l10n-id="turnOnAuto">Turn on automatically</a>
+          <label>
+            <select name="powersave.threshold">
+              <option value="0.05" data-l10n-id="powerSave-threshold" data-l10n-args='{"level":  "5"}'> 5% battery left</option>
+              <option value="0.15" data-l10n-id="powerSave-threshold" data-l10n-args='{"level": "15"}'>15% battery left</option>
+              <option value="0.25" data-l10n-id="powerSave-threshold" data-l10n-args='{"level": "25"}'>25% battery left</option>
+              <option value="0" data-l10n-id="never">Never</option>
+            </select>
+          </label>
+          <a data-l10n-id="turnOnAuto">Turn on automatically</a>
+        </li>
+        <li>
+          <p data-l10n-id="powerSaveMode-expl" class="description">
+            Turning on Power Save Mode turns off the phone’s Data, Bluetooth, and GPS
+            connections to extend battery life. You can still turn these services back on
+            manually.
+          </p>
         </li>
       </ul>
     </section>
