@@ -3,6 +3,8 @@
 
 'use strict';
 
+const kIdentityScreen = '../identity.html';
+
 var Identity = (function Identity() {
   var chromeEventId = null;
 
@@ -19,7 +21,7 @@ var Identity = (function Identity() {
         var frame = document.createElement('iframe');
         frame.setAttribute('mozbrowser', 'true');
         frame.classList.add('screen');
-        frame.src = 'http://cnn.com';//e.detail.uri;
+        frame.src = kIdentityScreen;
         frame.addEventListener('mozbrowserloadstart', function loadStart(evt) {
           // After creating the new frame containing the identity
           // flow, we send it back to chrome so the identity callbacks can be
@@ -33,7 +35,7 @@ var Identity = (function Identity() {
         });
 
         // The identity flow is shown within the trusted UI.
-        PopupManager.open('IdentityFlow', frame, 'http://cnn.com', true);
+        PopupManager.open('IdentityFlow', frame, kIdentityScreen, true);
         break;
 
       case 'close-id-dialog':
