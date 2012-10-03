@@ -31,14 +31,18 @@ var Identity = (function Identity() {
             id: chromeEventId,
             frame: evt.target
           });
+
+          dump("about to dispatch event from gaia");
+          dump(event);
           window.dispatchEvent(event);
         });
 
         // The identity flow is shown within the trusted UI.
-        PopupManager.open('IdentityFlow', frame, kIdentityScreen, true);
+        PopupManager.open('IdentityFlow', frame, kIdentityScreen, false);
         break;
 
       case 'close-id-dialog':
+        dump("in gaia close dialog");
         PopupManager.close(null, function dialogClosed() {
           var event = document.createEvent('customEvent');
           event.initCustomEvent('mozContentEvent', true, true,
