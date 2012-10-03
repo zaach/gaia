@@ -5,12 +5,21 @@
     <meta http-equiv="pragma" content="no-cache">
 
     <script>
-      function do() {
+      function log(msg) {
+        document.getElementById('log').innerHTML += "<pre>" + msg + "</pre><br />";
+      }
+      function doit() {
+        log("doing it!");
+        log(window.identityCallback);
         window.identityCallback("yeehah");
+        log("done");
       }
     </script>
   </head>
   <body>
-    <button onclick="do();">go!</button>
+    <button onclick="doit();">go!</button>
+    <Br />
+    <div id="log">
+    </div>
   </body>
 </html>
