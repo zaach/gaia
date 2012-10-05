@@ -3,7 +3,7 @@
 
 'use strict';
 
-const kIdentityScreen = '../identity.html';
+const kIdentityScreen = 'https://login.persona.org/sign_in#NATIVE';
 
 var Identity = (function Identity() {
   var chromeEventId = null;
@@ -43,13 +43,12 @@ var Identity = (function Identity() {
 
       case 'close-id-dialog':
         dump("in gaia close dialog");
-        PopupManager.close(null, function dialogClosed() {
-          var event = document.createEvent('customEvent');
-          event.initCustomEvent('mozContentEvent', true, true,
-                                { id: chromeEventId });
-          window.dispatchEvent(event);
-        });
+        PopupManager.close(null);
+        var event = document.createEvent('customEvent');
+        event.initCustomEvent('mozContentEvent', true, true,
+                              { id: chromeEventId });
+        window.dispatchEvent(event);
         break;
     }
-  });
+    });
 })();
