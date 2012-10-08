@@ -3,6 +3,8 @@
 
 'use strict';
 
+const kIdentityScreen = 'https://login.persona.org/sign_in#NATIVE';
+
 var Identity = (function Identity() {
   var chromeEventId = null;
 
@@ -19,7 +21,7 @@ var Identity = (function Identity() {
         var frame = document.createElement('iframe');
         frame.setAttribute('mozbrowser', 'true');
         frame.classList.add('screen');
-        frame.src = 'http://cnn.com';//e.detail.uri;
+        frame.src = kIdentityScreen;
         frame.addEventListener('mozbrowserloadstart', function loadStart(evt) {
           // After creating the new frame containing the identity
           // flow, we send it back to chrome so the identity callbacks can be
@@ -29,20 +31,23 @@ var Identity = (function Identity() {
             id: chromeEventId,
             frame: evt.target
           });
+
+          dump("about to dispatch event from gaia");
+          dump(event);
           window.dispatchEvent(event);
         });
 
         // The identity flow is shown within the trusted UI.
-        PopupManager.open('IdentityFlow', frame, 'http://cnn.com', true);
+        PopupManager.open('IdentityFlow', frame, kIdentityScreen, false);
         break;
 
       case 'close-id-dialog':
-        PopupManager.close(null, function dialogClosed() {
-          var event = document.createEvent('customEvent');
-          event.initCustomEvent('mozContentEvent', true, true,
-                                { id: chromeEventId });
-          window.dispatchEvent(event);
-        });
+        dump("in gaia close dialog");
+        PopupManager.close(null);
+        var event = document.createEvent('customEvent');
+        event.initCustomEvent('mozContentEvent', true, true,
+                              { id: chromeEventId });
+        window.dispatchEvent(event);
         break;
     }
   });

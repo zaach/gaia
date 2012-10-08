@@ -1,14 +1,14 @@
 (function(window) {
-  var idb = window.indexedDB || window.mozIndexedDB;
-
-  const VERSION = 8;
+  var idb = window.indexedDB;
+  const VERSION = 9;
 
   var store = {
     events: 'events',
     accounts: 'accounts',
     calendars: 'calendars',
     busytimes: 'busytimes',
-    settings: 'settings'
+    settings: 'settings',
+    alarms: 'alarms'
   };
 
   Object.freeze(store);
@@ -47,6 +47,10 @@
       var pending = 3;
       var self = this;
 
+      var accountStore = this.getStore('Account');
+      var settingStore = this.getStore('Setting');
+      var calendarStore = this.getStore('Calendar');
+
       function next() {
         pending--;
         if (!pending)
@@ -54,28 +58,34 @@
       }
 
       function complete() {
-        callback(null);
+        if (self.hasUpgraded && self.oldVersion < 8) {
+          self._setupDefaults(callback);
+        } else {
+          if (callback) {
+            callback();
+          }
+        }
       }
 
       // if there is an error case we must
       // throw an error any error here is completely
       // fatal.
       function loadRecords() {
-        self.getStore('Account').load(function(err) {
+        accountStore.load(function(err) {
           if (err) {
             throw err;
           }
           next();
         });
 
-        self.getStore('Setting').load(function(err) {
+        settingStore.load(function(err) {
           if (err) {
             throw err;
           }
           next();
         });
 
-        self.getStore('Calendar').load(function(err) {
+        calendarStore.load(function(err) {
           if (err) {
             throw err;
           }
@@ -152,18 +162,23 @@
       var newVersion = event.newVersion;
       var curVersion = event.oldVersion;
 
+      this.hasUpgraded = true;
+      this.oldVersion = curVersion;
+      this.upgradedVersion = newVersion;
+
       for (; curVersion <= newVersion; curVersion++) {
+
         // if version is < 7 then it was from pre-production
         // db and we can safely discard its information.
-        if (curVersion < 7) {
+        if (curVersion < 6) {
           // ensure clean state if this was an old db.
           var existingNames = db.objectStoreNames;
           for (var i = 0; i < existingNames.length; i++) {
             db.deleteObjectStore(existingNames[i]);
           }
 
-          // version 0-r are not maintained increment to 7
-          curVersion = 7;
+          // version 0-r are not maintained increment to 6
+          curVersion = 6;
 
           // busytimes has one event, has one calendar
           var busytimes = db.createObjectStore(
@@ -211,8 +226,24 @@
             store.calendars, { keyPath: '_id', autoIncrement: true }
           );
 
-        } else if (curVersion === 8) {
+        } else if (curVersion === 7) {
           db.createObjectStore(store.settings, { keyPath: '_id' });
+        } else if (curVersion === 8) {
+          var alarms = db.createObjectStore(
+            store.alarms, { keyPath: '_id', autoIncrement: true }
+          );
+
+          alarms.createIndex(
+            'trigger',
+            'trigger.utc',
+            { unique: false, multiEntry: false }
+          );
+
+          alarms.createIndex(
+            'busytimeId',
+            'busytimeId',
+            { unique: false, multiEntry: false }
+          );
         }
       }
     },
@@ -249,6 +280,45 @@
         store = trans.objectStore(store);
         store.clear();
       });
+    },
+
+    /**
+     * Setup default values for initial calendar load.
+     */
+    _setupDefaults: function(callback) {
+      var calendarStore = this.getStore('Calendar');
+      var accountStore = this.getStore('Account');
+
+      var trans = calendarStore.db.transaction(
+        ['accounts', 'calendars'],
+        'readwrite'
+      );
+
+      if (callback) {
+        trans.addEventListener('error', function(err) {
+          callback(err);
+        });
+
+        trans.addEventListener('complete', function() {
+          callback();
+        });
+      }
+
+      var account = new Calendar.Models.Account(
+        Calendar.Presets.local.options
+      );
+
+      account.preset = 'local';
+
+      account._id = uuid();
+
+      var calendar = {
+        accountId: account._id,
+        remote: Calendar.Provider.Local.defaultCalendar()
+      };
+
+      accountStore.persist(account, trans);
+      calendarStore.persist(calendar, trans);
     },
 
     deleteDatabase: function(callback) {

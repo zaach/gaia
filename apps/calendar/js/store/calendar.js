@@ -21,7 +21,7 @@
     _store: 'calendars',
 
     _dependentStores: [
-      'calendars', 'events', 'busytimes'
+      'calendars', 'events', 'busytimes', 'alarms'
     ],
 
     _parseId: function(id) {
@@ -91,8 +91,22 @@
      * @return {Calendar.Provider.Abstract} provider.
      */
     providerFor: function(calendar) {
-      var acc = this.db.getStore('Account').cached[calendar.accountId];
+      var acc = this.accountFor(calendar);
       return Calendar.App.provider(acc.providerType);
+    },
+
+    accountFor: function(calendar) {
+      return this.db.getStore('Account').cached[calendar.accountId];
+    },
+
+    /**
+     * Finds account for calendar
+     *
+     * @param {Calendar.Models.Calendar} calendar input calendar.
+     * @return {Calendar.Models.Account} cached account.
+     */
+    accountFor: function(calendar) {
+      return this.db.getStore('Account').cached[calendar.accountId];
     },
 
     /**

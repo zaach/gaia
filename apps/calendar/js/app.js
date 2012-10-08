@@ -25,6 +25,7 @@ Calendar.App = (function(window) {
       this.timeController = new Calendar.Controllers.Time(this);
       this.syncController = new Calendar.Controllers.Sync(this);
       this.serviceController = new Calendar.Controllers.Service(this);
+      this.alarmController = new Calendar.Controllers.Alarm(this);
     },
 
     /**
@@ -49,16 +50,16 @@ Calendar.App = (function(window) {
         next();
       }
 
-      /* temp views */
-      this.state('/week/', setPath, tempView('#week-view'));
-
       /* routes */
+      this.state('/week/', setPath, 'Week');
       this.state('/day/', setPath, 'Day');
       this.state('/month/', setPath, 'Month', 'MonthsDay');
       this.modifier('/settings/', setPath, 'Settings', { clear: false });
       this.modifier(
         '/advanced-settings/', setPath, 'AdvancedSettings'
       );
+
+      this.state('/alarm-display/:id', 'ModifyEvent');
 
       this.state('/add/', setPath, 'ModifyEvent');
       this.state('/event/:id', setPath, 'ModifyEvent');
@@ -94,6 +95,12 @@ Calendar.App = (function(window) {
 
       this.syncController.observe();
       this.timeController.observe();
+      this.alarmController.observe();
+
+      // turn on the auto queue this means that when
+      // alarms are added to the database we manage them
+      // transparently. Defaults to off for tests.
+      this.store('Alarm').autoQueue = true;
 
       this.timeController.move(new Date());
 

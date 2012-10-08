@@ -1135,6 +1135,10 @@ const IMEController = (function() {
         }
       }
 
+      if (_requireSuggestion()) {
+        IMERender.ime.classList.add('candidate-panel');
+      }
+
       _prepareLayoutParams(_layoutParams);
       this.updateLayoutParams();
 
@@ -1144,6 +1148,7 @@ const IMEController = (function() {
     // Hide IME
     hideIME: function kc_hideIME(imminent) {
       IMERender.ime.classList.add('hide');
+      IMERender.ime.classList.remove('candidate-panel');
       IMERender.hideIME(imminent);
     },
 
@@ -1242,6 +1247,11 @@ const IMEController = (function() {
 
       if (this.suggestionEngines[engineName])
         return;
+
+      // Tell the rendering module which suggestion engine we're using.
+      // Asian suggestion engines need more vertical space than latin ones.
+      // The renderer can use the engine name as a CSS class
+      IMERender.setSuggestionEngineName(engineName);
 
       // We might get a setLanguage call as the engine is loading. Ignore it.
       // We will set the language via init anyway.
