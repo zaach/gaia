@@ -5,14 +5,18 @@
 
 const kIdentityScreen = 'https://login.persona.org/sign_in#NATIVE';
 
-var Identity = (function Identity() {
-  var chromeEventId = null;
+var Identity = {
+  chromeEventId: null,
 
-  window.addEventListener('mozChromeEvent', function onMozChromeEvent(e) {
+  init: function() {
+    window.addEventListener('mozChromeEvent', this);
+  },
+
+  handleEvent: function onMozChromeEvent(e) {
     // We save the mozChromeEvent identifiers to send replies back from content
     // with this exact value.
-    chromeEventId = e.detail.id;
-    if (!chromeEventId)
+    this.chromeEventId = e.detail.id;
+    if (!this.chromeEventId)
       return;
 
     switch (e.detail.type) {
@@ -26,16 +30,11 @@ var Identity = (function Identity() {
           // After creating the new frame containing the identity
           // flow, we send it back to chrome so the identity callbacks can be
           // injected.
-          var event = document.createEvent('CustomEvent');
-          event.initCustomEvent('mozContentEvent', true, true, {
-            id: chromeEventId,
+          this._dispatchEvent({
+            id: this.chromeEventId,
             frame: evt.target
           });
-
-          dump("about to dispatch event from gaia");
-          dump(event);
-          window.dispatchEvent(event);
-        });
+        }.bind(this));
 
         // The identity flow is shown within the trusted UI.
         PopupManager.open('IdentityFlow', frame, kIdentityScreen, false);
@@ -44,11 +43,15 @@ var Identity = (function Identity() {
       case 'close-id-dialog':
         dump("in gaia close dialog");
         PopupManager.close(null);
-        var event = document.createEvent('customEvent');
-        event.initCustomEvent('mozContentEvent', true, true,
-                              { id: chromeEventId });
-        window.dispatchEvent(event);
+        this._dispatchEvent({ id: this.chromeEventId });
         break;
     }
-    });
-})();
+  },
+  _dispatchEvent: function su_dispatchEvent(obj) {
+    var event = document.createEvent('CustomEvent');
+    event.initCustomEvent('mozContentEvent', true, true, obj);
+    window.dispatchEvent(event);
+  }
+};
+
+Identity.init();
