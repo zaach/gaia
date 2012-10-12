@@ -36,6 +36,7 @@ var Identity = (function() {
           }
           var frame = document.createElement('iframe');
           frame.setAttribute('mozbrowser', 'true');
+          frame.classList.add('screen');
           frame.src = e.detail.showUI ? kIdentityScreen : kIdentityFrame;
           frame.addEventListener('mozbrowserloadstart', function loadStart(evt) {
             // After creating the new frame containing the identity
@@ -47,8 +48,8 @@ var Identity = (function() {
             });
           }.bind(this));
 
+
           if (e.detail.showUI) {
-            frame.classList.add('screen');
             // The identity flow is shown within the trusted UI.
             PopupManager.open('IdentityFlow', frame, kIdentityScreen, false);
           } else {
@@ -60,7 +61,9 @@ var Identity = (function() {
 
         case 'received-id-assertion':
           //dump("in gaia close dialog");
-          PopupManager.close(null);
+          if (e.detail.showUI) {
+            PopupManager.close(null);
+          }
           this._dispatchEvent({ id: this.chromeEventId });
           break;
       }
