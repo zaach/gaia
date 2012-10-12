@@ -4,6 +4,7 @@
 'use strict';
 
 const kIdentityScreen = 'https://login.persona.org/sign_in#NATIVE';
+const kIdentityFrame = 'https://login.persona.org/communication_iframe';
 
 
 var Identity = (function() {
@@ -35,12 +36,11 @@ var Identity = (function() {
           }
           var frame = document.createElement('iframe');
           frame.setAttribute('mozbrowser', 'true');
-          frame.src = kIdentityScreen;
+          frame.src = e.detail.showUI ? kIdentityScreen : kIdentityFrame;
           frame.addEventListener('mozbrowserloadstart', function loadStart(evt) {
             // After creating the new frame containing the identity
             // flow, we send it back to chrome so the identity callbacks can be
             // injected.
-            console.log("???");
             this._dispatchEvent({
               id: this.chromeEventId,
               frame: evt.target
