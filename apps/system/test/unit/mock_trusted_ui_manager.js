@@ -1,4 +1,4 @@
-var MockPopupManager = {
+var MockTrustedUIManager = {
   open: function(name, frame, origin) {
     this.mOpened = true;
     this.mName = name;
@@ -14,7 +14,6 @@ var MockPopupManager = {
   mName: null,
   mFrame: null,
   mOrigin: null,
-  mTrusted: null,
   mTearDown: function tearDown() {
     this.mOpened = false;
     this.mName = null;
