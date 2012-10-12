@@ -41,7 +41,8 @@ suite('identity', function() {
     setup(function() {
       var event = new MockChromeEvent({
         type: 'open-id-dialog',
-        id: 'test-open-event-id'
+        id: 'test-open-event-id',
+        showUI: true
       });
       subject.handleEvent(event);
     });
@@ -67,7 +68,7 @@ suite('identity', function() {
   suite('close popup', function() {
     setup(function() {
       var event = new MockChromeEvent({
-        type: 'close-id-dialog',
+        type: 'received-id-assertion',
         id: 'test-close-event-id'
       });
       subject.handleEvent(event);
