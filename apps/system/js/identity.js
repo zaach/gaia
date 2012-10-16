@@ -50,7 +50,7 @@ var Identity = (function() {
 
           if (e.detail.showUI) {
             // The identity flow is shown within the trusted UI.
-            PopupManager.open('IdentityFlow', frame, kIdentityScreen, false);
+            TrustedUIManager.open('IdentityFlow', frame, kIdentityScreen, this.chromeEventId);
           } else {
             var container = document.getElementById('screen');
             container.appendChild(frame);
@@ -61,7 +61,7 @@ var Identity = (function() {
         case 'received-id-assertion':
           //dump("in gaia close dialog");
           if (e.detail.showUI) {
-            PopupManager.close(null);
+            TrustedUIManager.close(null);
           }
           this._dispatchEvent({ id: this.chromeEventId });
           break;
