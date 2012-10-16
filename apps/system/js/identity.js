@@ -3,9 +3,8 @@
 
 'use strict';
 
-const kIdentityScreen = 'https://login.persona.org/sign_in#NATIVE';
-const kIdentityFrame = 'https://login.persona.org/communication_iframe';
-
+const kIdentityScreen = 'https://b2g.personatest.org/sign_in#NATIVE';
+const kIdentityFrame = 'https://b2g.personatest.org/communication_iframe';
 
 var Identity = (function() {
   var iframe;
