@@ -50,8 +50,8 @@ suite('identity', function() {
     test('popup parameters', function() {
       assert.equal(true, MockPopupManager.mOpened);
       assert.equal('IdentityFlow', MockPopupManager.mName);
-      assert.equal('https://login.persona.org/sign_in#NATIVE', MockPopupManager.mOrigin);
-      assert.equal('https://login.persona.org/sign_in#NATIVE', MockPopupManager.mFrame.src);
+      assert.equal('https://b2g.personatest.org/sign_in#NATIVE', MockPopupManager.mOrigin);
+      assert.equal(MockPopupManager.mOrigin, MockPopupManager.mFrame.src);
     });
 
     test('frame event listener', function() {
@@ -69,7 +69,8 @@ suite('identity', function() {
     setup(function() {
       var event = new MockChromeEvent({
         type: 'received-id-assertion',
-        id: 'test-close-event-id'
+        id: 'test-close-event-id',
+        showUI: true
       });
       subject.handleEvent(event);
     });
