@@ -1,10 +1,12 @@
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- /
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 
+// When bug 794999 is resolved, switch to use the abstract Trusted UI Component
+
 'use strict';
 
-const kIdentityScreen = 'https://b2g.personatest.org/sign_in#NATIVE';
-const kIdentityFrame = 'https://b2g.personatest.org/communication_iframe';
+const kIdentityScreen = 'https://notoriousb2g.personatest.org/sign_in#NATIVE';
+const kIdentityFrame = 'https://notoriousb2g.personatest.org/communication_iframe';
 
 var Identity = (function() {
   var iframe;
@@ -50,18 +52,18 @@ var Identity = (function() {
 
           if (e.detail.showUI) {
             // The identity flow is shown within the trusted UI.
-            PopupManager.open('IdentityFlow', frame, kIdentityScreen, false);
+            TrustedUIManager.open('IdentityFlow', frame, kIdentityScreen, this.chromeEventId);
           } else {
             var container = document.getElementById('screen');
             container.appendChild(frame);
+            frame.classList.add('communication-frame');
             iframe = frame;
           }
           break;
 
         case 'received-id-assertion':
-          //dump("in gaia close dialog");
           if (e.detail.showUI) {
-            PopupManager.close(null);
+            TrustedUIManager.close(null);
           }
           this._dispatchEvent({ id: this.chromeEventId });
           break;

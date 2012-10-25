@@ -1,24 +1,24 @@
 requireApp('system/js/identity.js');
 requireApp('system/test/unit/mock_chrome_event.js');
-requireApp('system/test/unit/mock_popup_manager.js');
+requireApp('system/test/unit/mock_trusted_ui_manager.js');
 
 // ensure its defined as a global so mocha will not complain about us
 // leaking new global variables during the test
-if (!window.PopupManager) {
-  window.PopupManager = true;
+if (!window.TrustedUIManager) {
+  window.TrustedUIManager = true;
 }
 
 suite('identity', function() {
   var subject;
-  var realPopupManager;
+  var realTrustedUIManager;
   var realDispatchEvent;
 
   var lastDispatchedEvent = null;
 
   suiteSetup(function() {
     subject = Identity;
-    realPopupManager = window.PopupManager;
-    window.PopupManager = MockPopupManager;
+    realTrustedUIManager = window.TrustedUIManager;
+    window.TrustedUIManager = MockTrustedUIManager;
 
     realDispatchEvent = subject._dispatchEvent;
     subject._dispatchEvent = function (obj) {
@@ -27,14 +27,14 @@ suite('identity', function() {
   });
 
   suiteTeardown(function() {
-    window.PopupManager = realPopupManager;
+    window.TrustedUIManager = realTrustedUIManager;
     subject._dispatchEvent = realDispatchEvent;
   });
 
   setup(function() {});
 
   teardown(function() {
-    MockPopupManager.mTearDown();
+    MockTrustedUIManager.mTearDown();
   });
 
   suite('open popup', function() {
@@ -48,14 +48,14 @@ suite('identity', function() {
     });
 
     test('popup parameters', function() {
-      assert.equal(true, MockPopupManager.mOpened);
-      assert.equal('IdentityFlow', MockPopupManager.mName);
-      assert.equal('https://b2g.personatest.org/sign_in#NATIVE', MockPopupManager.mOrigin);
-      assert.equal(MockPopupManager.mOrigin, MockPopupManager.mFrame.src);
+      assert.equal(true, MockTrustedUIManager.mOpened);
+      assert.equal('IdentityFlow', MockTrustedUIManager.mName);
+      assert.equal('https://b2g.personatest.org/sign_in#NATIVE', MockTrustedUIManager.mOrigin);
+      assert.equal(MockTrustedUIManager.mOrigin, MockTrustedUIManager.mFrame.src);
     });
 
     test('frame event listener', function() {
-      var frame = MockPopupManager.mFrame;
+      var frame = MockTrustedUIManager.mFrame;
       var event = document.createEvent('CustomEvent');
       event.initCustomEvent('mozbrowserloadstart', true, true, {target: frame});
       frame.dispatchEvent(event);
@@ -76,7 +76,7 @@ suite('identity', function() {
     });
 
     test('close', function() {
-      assert.equal(false, MockPopupManager.mOpened);
+      assert.equal(false, MockTrustedUIManager.mOpened);
       assert.equal('test-close-event-id', lastDispatchedEvent.id);
     });
   });
