@@ -67,11 +67,11 @@ var TrustedUIManager = {
     } else {
       // first time, spin back to home screen first
       this.popupContainer.classList.add('up');
-      this.popupContainer.classList.remove('closing');
-      this._hideCallerApp(this._lastDisplayedApp, function openTrustedUI() {
-        this.popupContainer.classList.remove('up');
+      // this.popupContainer.classList.remove('closing');
+      //this._hideCallerApp(this._lastDisplayedApp, function openTrustedUI() {
+        // this.popupContainer.classList.remove('up');
         this._pushNewDialog(name, frame, chromeEventId, onCancelCB);
-      }.bind(this));
+      //}.bind(this));
     }
   },
 
@@ -80,7 +80,6 @@ var TrustedUIManager = {
                              this.currentStack.length;
 
     this._restoreOrientation();
-
     if (callback)
       callback();
 
@@ -88,6 +87,7 @@ var TrustedUIManager = {
       // Nothing to close.  what are you doing?
       return;
     } else if (stackSize === 1) {
+      this.popupContainer.classList.remove('up');
       // Only one dialog, so transition back to main app.
       var self = this;
       var container = this.popupContainer;

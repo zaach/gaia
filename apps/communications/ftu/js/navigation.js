@@ -56,6 +56,11 @@ var steps = {
     onlyBackward: false,
     hash: '#browser_privacy',
     requireSIM: false
+  },
+  9: {
+    onlyForward: false,
+    hash: '#persona_flow',
+    requireSIM: false
   }
 };
 
@@ -235,6 +240,9 @@ var Navigation = {
         // override the className here
         className = 'hidden';
         UIManager.navBar.classList.add('back-only');
+        break;
+      case '#persona_flow':
+        UIManager.mainTitle.innerHTML = _('persona');
         break;
     }
 
