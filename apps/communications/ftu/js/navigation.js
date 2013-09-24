@@ -57,7 +57,7 @@ var steps = {
     hash: '#browser_privacy',
     requireSIM: false
   },
-  9: {
+  10: {
     onlyForward: false,
     hash: '#persona_flow',
     requireSIM: false
