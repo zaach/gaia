@@ -243,6 +243,17 @@ var Navigation = {
         break;
       case '#persona_flow':
         UIManager.mainTitle.innerHTML = _('persona');
+        navigator.mozId.watch({
+          loggedInUser: null,
+          onlogin: (function() {
+            UIManager.personaLogin.textContent = 'Successfully logged \o/';
+          }).bind(this),
+          onlogout: function() {},
+          onready: function() {
+            navigator.mozId.request({_internal: true});
+          },
+          _internal: true
+        });
         break;
     }
 

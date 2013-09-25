@@ -204,17 +204,6 @@ var UIManager = {
     button.addEventListener('click',
                             this.onOfflineDialogButtonClick.bind(this));
 
-    this.personaLogin.addEventListener('click', (function() {
-      navigator.mozId.watch({
-        loggedInUser: null,
-        onlogin: (function() {
-          this.personaLogin.textContent = 'Successfully logged \o/';
-        }).bind(this),
-        onlogout: function() {},
-        onready: function() {}
-      });
-      navigator.mozId.request();
-    }).bind(this));
   },
 
   sendNewsletter: function ui_sendNewsletter(callback) {
